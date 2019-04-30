@@ -8,9 +8,9 @@ void WSClient::onConnected()
   connect(&m_webSocket, &QWebSocket::binaryMessageReceived,
           this, &WSClient::onBinaryMessageReceived);
 
-  // send text message:
-//  m_webSocket.sendTextMessage(QStringLiteral("Hello, world!"));
-  // send sendBinary message:
-  // m_webSocket.sendBinaryMessage
+//// send text message:
+  m_webSocket.sendTextMessage(QStringLiteral("send message on connect!"));
+//// send sendBinary message:
+//  m_webSocket.sendBinaryMessage
 }
 

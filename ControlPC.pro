@@ -8,3 +8,4 @@ HEADERS += \
     createSSLConfig.h
 
 include(Client/Client.pri)
+include(Server/Server.pri)
