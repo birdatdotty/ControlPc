@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>root.fgbu.vmf.key</file>
+        <file>root.fgbu.vmf.crt</file>
+    </qresource>
+</RCC>
