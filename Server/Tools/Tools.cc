@@ -17,7 +17,7 @@ QObject *Tools::init()
 
 bool Tools::createUser(QString user)
 {
-    QString cmd = "sudo useradd -m " + user;
+    QString cmd = "sudo useradd -s /bin/bash -m " + user;
     const char *command = cmd.toUtf8();
     int ret = system(command);
 
@@ -40,7 +40,6 @@ bool Tools::setPassword(QString user, QString password)
     chpasswd.setProcessChannelMode(QProcess::ForwardedChannels);
 
     QString echo_cmd = "echo %1:%2";
-
     QString chpasswd_cmd = "sudo chpasswd";
 
     echo.start(echo_cmd.arg(user).arg(password));
@@ -92,6 +91,7 @@ bool Tools::Action(QJsonObject json)
         db->open("/tmp/db_name.sqlite");
 
         qInfo() << __LINE__ << db->setPassword(name, password);
+
         qInfo() << __LINE__ << createUser(name);
         qInfo() << __LINE__ << setPassword(name, password);
         qInfo() << __LINE__ << setSmbPassword(name, password);

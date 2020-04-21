@@ -2,11 +2,46 @@
 
 #include "Action.h"
 
-Server::Server(quint16 port, QObject *parent)
+Server::Server(int argc, char **argv, quint16 port, QObject *parent)
     : QObject(parent),
-      m_pWebSocketServer(new QWebSocketServer(QStringLiteral("Echo Server"),
-                                              QWebSocketServer::NonSecureMode, this))
+      QtService<QCoreApplication>(argc, argv, "UserBdServer"),
+      m_port(port)
 {
+    try {
+        qDebug() << "CONSTRUCTOR";
+
+        setServiceDescription("This is my service. ");
+        setServiceFlags(QtServiceBase::CanBeSuspended); // able to resume
+        qDebug() << "CONSTRUCTOR 1";
+    } catch (...) {
+        qCritical() << "An unknown error occured in constructor";
+    }
+}
+
+bool Server::regAction(QString action_name, Action *action)
+{
+    if (actions.contains(action_name))
+        return false;
+
+    actions[action_name] = action;
+
+    return true;
+}
+
+Server::~Server()
+{
+    qDeleteAll(m_clients.begin(), m_clients.end());
+}
+
+void Server::start()
+{
+    QCoreApplication *app = application();
+    qInfo() << "service started!";
+    qInfo() << app->applicationDirPath();
+    m_pWebSocketServer =
+            new QWebSocketServer(QStringLiteral("UserBdServer"),
+                                 QWebSocketServer::NonSecureMode, this);
+
     QSslConfiguration sslConfiguration;
     QFile certFile(QStringLiteral(":/root.fgbu.vmf.crt"));
     QFile keyFile(QStringLiteral(":/root.fgbu.vmf.key"));
@@ -27,26 +62,33 @@ Server::Server(quint16 port, QObject *parent)
 
     m_pWebSocketServer->setSslConfiguration(sslConfiguration);
 
-    if (m_pWebSocketServer->listen(QHostAddress::Any, port)) {
+    if (m_pWebSocketServer->listen(QHostAddress::Any, m_port)) {
         connect(m_pWebSocketServer, &QWebSocketServer::newConnection,
                 this, &Server::onNewConnection);
         connect(m_pWebSocketServer, &QWebSocketServer::closed, this, &Server::closed);
     }
+
 }
 
-bool Server::regAction(QString action_name, Action *action)
+void Server::pause()
 {
-    if (actions.contains(action_name))
-        return false;
 
-    actions[action_name] = action;
-
-    return true;
 }
 
-Server::~Server()
+void Server::resume()
+{
+
+}
+
+void Server::stop()
 {
     qDeleteAll(m_clients.begin(), m_clients.end());
+    delete m_pWebSocketServer;
+}
+
+void Server::createApplication(int &argc, char **argv)
+{
+    QtService::createApplication(argc, argv);
 }
 
 void Server::onNewConnection()

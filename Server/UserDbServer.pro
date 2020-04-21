@@ -19,21 +19,30 @@ SOURCES += \
         Action.cpp \
         CreateUser.cc \
         Server.cpp \
-        main.cpp
+        main.cpp \
+        testws.cpp
 
 include (UserDb/UserDb.pri)
-include(Tools/Tools.pri)
+include (Tools/Tools.pri)
 
+include (qtservice/src/qtservice.pri)
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
-!isEmpty(target.path): INSTALLS += target
+
+service.path = /opt/$${TARGET}/etc/systemd/system/
+service.files = userdbserver.service
+!isEmpty(target.path): INSTALLS += target service
 
 HEADERS += \
     Action.h \
     CreateUser.h \
-    Server.h
+    Server.h \
+    testws.h
 
 RESOURCES += \
     root.qrc
+
+DISTFILES += \
+    userdbserver.service

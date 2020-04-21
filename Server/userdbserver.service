@@ -1,0 +1,9 @@
+[Unit]
+Description=UserDbServer
+
+[Service]
+ExecStart=/opt/UserDbServer/bin/UserDbServer
+Type=forking
+
+[Install]
+WantedBy=multi-user.target
