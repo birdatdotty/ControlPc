@@ -5,5 +5,7 @@
         <file>UserAdd.qml</file>
         <file>qtquickcontrols2.conf</file>
         <file>Cert.qml</file>
+        <file>lenovo.dotty.su.crt</file>
+        <file>lenovo.dotty.su.key</file>
     </qresource>
 </RCC>

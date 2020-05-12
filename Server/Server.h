@@ -7,20 +7,22 @@
 
 class Action;
 
-class Server : public QObject,
-        public QtService<QCoreApplication>
+class Server : public QObject
 {
     Q_OBJECT
 public:
-    explicit Server(int argc, char **argv, quint16 port, QObject *parent = nullptr);
+    explicit Server(quint16 port, QObject *parent = nullptr);
     bool regAction(QString action_name, Action* action);
     ~Server();
 
     void start();
-    void pause();
-    void resume();
     void stop();
     void createApplication(int &argc, char **argv);
+
+    void setCrtFile(QString newCrtFile);
+    void setKeyFile(QString newKeyFile);
+
+    static Server* init();
 
 signals:
     void closed();
@@ -38,6 +40,9 @@ private:
     QList<QWebSocket *> m_clients;
     QMap<QString,Action*> actions;
     quint16 m_port;
+
+    QString crtFilePath,
+            keyFilePath;
 };
 
 #endif // SERVER_H

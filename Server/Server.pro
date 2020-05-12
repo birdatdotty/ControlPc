@@ -15,17 +15,43 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-SOURCES += \
+CONFIG(release, debug|release) {
+    SOURCES += \
+        Action.cpp \
+        CreateUser.cc \
+        Server.cpp \
+        main.cpp \
+        testws.cpp \
+        Service.cpp
+} else {
+    SOURCES += \
         Action.cpp \
         CreateUser.cc \
         Server.cpp \
         main.cpp \
         testws.cpp
+}
+
+CONFIG(release, debug|release) {
+    HEADERS += \
+        Action.h \
+        CreateUser.h \
+        Server.h \
+        testws.h \
+        Service.h
+} else {
+    HEADERS += \
+        Action.h \
+        CreateUser.h \
+        Server.h \
+        testws.h
+}
+
 
 include (UserDb/UserDb.pri)
 include (Tools/Tools.pri)
 
-include (qtservice/src/qtservice.pri)
+include (../qtservice/src/qtservice.pri)
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -46,3 +72,6 @@ RESOURCES += \
 
 DISTFILES += \
     userdbserver.service
+
+SOURCES += \
+    ServerInit.cpp

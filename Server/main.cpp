@@ -6,14 +6,22 @@
 #include "CreateUser.h"
 #include "testws.h"
 
+#include "qtservice.h"
+
+#ifdef QT_DEBUG
 int main(int argc, char **argv)
 {
-//    QCoreApplication a(argc, argv);
+    QCoreApplication a(argc, argv);
+    Server::init();
 
-    Server server(argc, argv, 8888);
-    server.regAction("create user", new CreateUser());
-    server.regAction("test", new TestWs());
-
-//    return a.exec();
-    return server.exec();
+    return a.exec();
 }
+#else
+#include "Service.h"
+int main(int argc, char **argv)
+{
+    Service service(argc, argv);
+    qInfo() << "int main(int argc, char **argv)" << argv;
+    return service.exec();
+}
+#endif

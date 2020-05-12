@@ -32,3 +32,13 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     Backend.h
+
+DISTFILES += \
+    lenovo.dotty.su.crt \
+    lenovo.dotty.su.key
+
+contains(ANDROID_TARGET_ARCH,arm64-v8a) {
+    ANDROID_EXTRA_LIBS = \
+        $$PWD/../../../my/output/lib/android-arm64/libcrypto.so \
+        $$PWD/../../../my/output/lib/android-arm64/libssl.so
+}

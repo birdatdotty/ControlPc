@@ -2,7 +2,7 @@
 Description=UserDbServer
 
 [Service]
-ExecStart=/opt/UserDbServer/bin/UserDbServer
+ExecStart=/opt/Server/bin/Server
 Type=forking
 
 [Install]

@@ -17,7 +17,7 @@ Page {
         Button {
             enabled: !Backend.status
             text: "подключится"
-            onClicked: Backend.to("ws://lenovo.dotty.su:8888")
+            onClicked: Backend.to("wss://test-pc.dotty.su:8888")
         }
 
         Button {

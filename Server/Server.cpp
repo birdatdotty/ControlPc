@@ -2,20 +2,10 @@
 
 #include "Action.h"
 
-Server::Server(int argc, char **argv, quint16 port, QObject *parent)
+Server::Server(quint16 port, QObject *parent)
     : QObject(parent),
-      QtService<QCoreApplication>(argc, argv, "UserBdServer"),
       m_port(port)
 {
-    try {
-        qDebug() << "CONSTRUCTOR";
-
-        setServiceDescription("This is my service. ");
-        setServiceFlags(QtServiceBase::CanBeSuspended); // able to resume
-        qDebug() << "CONSTRUCTOR 1";
-    } catch (...) {
-        qCritical() << "An unknown error occured in constructor";
-    }
 }
 
 bool Server::regAction(QString action_name, Action *action)
@@ -35,16 +25,13 @@ Server::~Server()
 
 void Server::start()
 {
-    QCoreApplication *app = application();
-    qInfo() << "service started!";
-    qInfo() << app->applicationDirPath();
     m_pWebSocketServer =
             new QWebSocketServer(QStringLiteral("UserBdServer"),
-                                 QWebSocketServer::NonSecureMode, this);
+                                 QWebSocketServer::SecureMode, this);
 
     QSslConfiguration sslConfiguration;
-    QFile certFile(QStringLiteral(":/root.fgbu.vmf.crt"));
-    QFile keyFile(QStringLiteral(":/root.fgbu.vmf.key"));
+    QFile certFile(crtFilePath);
+    QFile keyFile(keyFilePath);
 
     certFile.open(QIODevice::ReadOnly);
     keyFile.open(QIODevice::ReadOnly);
@@ -55,7 +42,7 @@ void Server::start()
     certFile.close();
     keyFile.close();
 
-    sslConfiguration.setPeerVerifyMode(QSslSocket::VerifyNone);
+    sslConfiguration.setPeerVerifyMode(QSslSocket::VerifyPeer);
     sslConfiguration.setLocalCertificate(certificate);
     sslConfiguration.setPrivateKey(sslKey);
     sslConfiguration.setProtocol(QSsl::TlsV1SslV3);
@@ -70,25 +57,12 @@ void Server::start()
 
 }
 
-void Server::pause()
-{
-
+void Server::setCrtFile(QString newCrtFile) {
+    crtFilePath = newCrtFile;
 }
 
-void Server::resume()
-{
-
-}
-
-void Server::stop()
-{
-    qDeleteAll(m_clients.begin(), m_clients.end());
-    delete m_pWebSocketServer;
-}
-
-void Server::createApplication(int &argc, char **argv)
-{
-    QtService::createApplication(argc, argv);
+void Server::setKeyFile(QString newKeyFile) {
+    keyFilePath = newKeyFile;
 }
 
 void Server::onNewConnection()
