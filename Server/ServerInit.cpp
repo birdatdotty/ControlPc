@@ -6,8 +6,8 @@
 Server* Server::init() {
     Server* server = new Server(8888);
 
-    server->setCrtFile("/opt/ssl/lenovo.dotty.su.crt");
-    server->setKeyFile("/opt/ssl/lenovo.dotty.su.key");
+    server->setCrtFile("c:/opt/ssl/test-pc.dotty.su.crt");
+    server->setKeyFile("c:/opt/ssl/test-pc.dotty.su.key");
 
     server->regAction("create user", new CreateUser());
     server->regAction("test", new TestWs());

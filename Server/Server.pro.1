@@ -76,12 +76,5 @@ DISTFILES += \
 SOURCES += \
     ServerInit.cpp
 
-
-target.path = /var/share/control_pc
-
-customtarget1.path = target.path
-customtarget1.commands = example-fedora.js $$target.path/${TARGET} $$target.path/
-QMAKE_EXTRA_TARGETS += customtarget1
-
-win32:INSTALLS += target customtarget1
-unix:INSTALLS =+ target
+target.path = /tmp/22bin/
+INSTALLS += target
