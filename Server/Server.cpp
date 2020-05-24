@@ -75,8 +75,8 @@ void Server::start()
     certFile.close();
     keyFile.close();
 
-    sslConfiguration.setPeerVerifyMode(QSslSocket::VerifyPeer);
-//    sslConfiguration.setPeerVerifyMode(QSslSocket::VerifyNone);
+//    sslConfiguration.setPeerVerifyMode(QSslSocket::VerifyPeer);
+    sslConfiguration.setPeerVerifyMode(QSslSocket::VerifyNone);
     sslConfiguration.setLocalCertificate(certificate);
     sslConfiguration.setPrivateKey(sslKey);
     sslConfiguration.setProtocol(QSsl::TlsV1SslV3);
